@@ -12,8 +12,17 @@ const md = MarkdownIt({ html: true, linkify: true })
       defaultColor: "light-dark()"
     })
   )
-  .use(linkAttributes, { attrs: { target: "_blank" } })
-  .use(anchor);
+  .use(linkAttributes, {
+    matcher: (href) => !href.startsWith("#"),
+    attrs: { target: "_blank" }
+  })
+  .use(anchor, {
+    permalink: anchor.permalink.linkInsideHeader({
+      symbol: "🔗",
+      space: " ",
+      class: "header-anchor no-underline text-xs align-middle"
+    })
+  });
 
 const tagFilter = (s) =>
   s.replace(

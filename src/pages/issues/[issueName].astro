@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import TocList from "../../components/TocList.astro";
 import { issueImages } from "../../issueImages";
 
 export async function getStaticPaths() {
@@ -12,6 +13,16 @@ const { issue } = Astro.props;
 const issueName = issue.id;
 const { Content, headings } = await render(issue);
 const toc = headings.filter((h) => h.depth === 2 && h.text !== issueName);
+
+type TocNode = (typeof headings)[number] & { children: TocNode[] };
+const tree: TocNode[] = [];
+const stack: TocNode[] = [];
+for (const h of headings.filter((h) => h.depth <= 3 && h.text.trim() !== issueName)) {
+  const node = { ...h, children: [] };
+  while (stack.length && stack.at(-1)!.depth >= h.depth) stack.pop();
+  (stack.at(-1)?.children ?? tree).push(node);
+  stack.push(node);
+}
 
 // ponytail: regex over raw markdown; switch to markdown-it tokens if issue formatting drifts
 const body = issue.body ?? "";
@@ -80,35 +91,34 @@ const image = issueImages(body)[0];
     </div>
   </div>
   <hr class="my-4" />
-  <details class="group p-3 rounded-lg">
-    <summary class="flex justify-start gap-3 cursor-pointer list-none rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 group-open:cursor-auto group-open:hover:bg-transparent">
+  <details class="group rounded-lg">
+    <summary class="flex justify-start gap-3 cursor-pointer p-3 list-none rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 group-open:cursor-auto group-open:hover:bg-transparent">
       <div class=" text-sm font-bold shrink-0">목차</div>
       <div class=" flex gap-1 flex-col group-open:hidden">
         <div class=" opacity-0">목차</div>
         <ul class=" flex gap-1 flex-col">
-          {toc.slice(0, 7).map((h) => <li><span class="text-sm">{h.text}</span></li>)}
+          {
+            tree.map((s) => (
+              <li>
+                <span class="text-sm font-bold">{s.text}</span>
+                <ul class="pl-4 mt-1 flex gap-1 flex-col">
+                  {s.children.slice(0, 3).map((h) => <li><span class="text-sm">{h.text}</span></li>)}
+                  {s.children.length > 3 && <li class="text-sm">...</li>}
+                </ul>
+              </li>
+            ))
+          }
         </ul>
         {
-          toc.length > 7 && (
-            <>
-              <div>...</div>
-              <div class="  text-md mt-3 hover:underline">클릭하여 목차 펼치기</div>
-            </>
+          tree.some((s) => s.children.length > 3) && (
+            <div class="  text-md mt-3 hover:underline">클릭하여 목차 펼치기</div>
           )
         }
       </div>
     </summary>
-    <ul class=" flex gap-1 flex-col pl-12 -mt-5">
-      {
-        toc.map((h) => (
-          <li>
-            <a href={`#${h.slug}`} class="hover:underline cursor-pointer text-sm">
-              {h.text}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+    <div class="pl-12 -mt-5">
+      <TocList items={tree} />
+    </div>
   </details>
   <hr class="my-4" />
   <div class="prose dark:prose-invert prose-headings:font-bold prose-a:text-blue-600">

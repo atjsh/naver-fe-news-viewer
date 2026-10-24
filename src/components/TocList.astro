@@ -1,0 +1,27 @@
+---
+import type { MarkdownHeading } from "astro";
+
+type TocNode = MarkdownHeading & { children: TocNode[] };
+interface Props {
+  items: TocNode[];
+}
+
+const { items } = Astro.props;
+---
+
+<ul class=" flex gap-1 flex-col">
+  {
+    items.map((h) => (
+      <li>
+        <a href={`#${h.slug}`} class:list={["hover:underline cursor-pointer text-sm", h.depth === 1 && "font-bold"]}>
+          {h.text}
+        </a>
+        {h.children.length > 0 && (
+          <div class="pl-4 mt-1">
+            <Astro.self items={h.children} />
+          </div>
+        )}
+      </li>
+    ))
+  }
+</ul>
