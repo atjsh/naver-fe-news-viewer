@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import { issueImages } from "../../issueImages";
 
 export async function getStaticPaths() {
   const issues = await getCollection("issues");
@@ -38,9 +39,7 @@ const description = paragraph
       .slice(0, 3)
       .map((h) => h.text)
       .join(" · ");
-const image = [...body.matchAll(/<img\s[^>]*src="?([^"\s>]+)/g)]
-  .map((m) => m[1])
-  .find((src) => !src.includes("hits.sh") && !/\.svg(\?|$)/i.test(src));
+const image = issueImages(body)[0];
 ---
 
 <Layout title={`${issueName} | fe-news`} {ogTitle} {description} {image} type="article">

@@ -1,12 +1,14 @@
 ---
 import { getCollection, render } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import { issueImages } from "../../issueImages";
 
 const issues = await Promise.all(
   (await getCollection("issues"))
     .sort((a, b) => b.id.localeCompare(a.id))
     .map(async (issue) => ({
       id: issue.id,
+      images: issueImages(issue.body).slice(0, 5),
       h2s: (await render(issue)).headings.filter((h) => h.depth === 2 && h.text)
     }))
 );
@@ -33,13 +35,32 @@ const issues = await Promise.all(
     <hr class=" my-3" />
     <ul class=" flex gap-3 flex-col w-full">
       {
-        issues.map(({ id, h2s }) => (
+        issues.map(({ id, images, h2s }) => (
           <a
             href={`/issues/${id}`}
-            class="text-blue-600 visited:text-purple-600 hover:underline cursor-pointer p-3 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+            class="group text-blue-600 visited:text-purple-600 hover:underline cursor-pointer p-3 hover:bg-zinc-100 dark:hover:bg-zinc-900"
           >
-            <li>
-              <div>
+            <li class="flex gap-3">
+              <div
+                data-slides
+                class="relative shrink-0 w-30 h-30 rounded overflow-hidden bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-2xl"
+              >
+                📰
+                {images.map((src, k) => (
+                  <img
+                    src={src}
+                    onerror="const p=this.parentElement,v=!this.classList.contains('opacity-0');this.remove();v&&p.querySelector('img')?.classList.remove('opacity-0')"
+                    alt=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer"
+                    class:list={[
+                      "absolute inset-0 w-full h-full object-cover motion-safe:transition-[opacity,scale] duration-500 group-hover:scale-110",
+                      k > 0 && "opacity-0"
+                    ]}
+                  />
+                ))}
+              </div>
+              <div class="min-w-0">
                 <div class=" text-xl">
                   {id}
                 </div>
@@ -59,3 +80,25 @@ const issues = await Promise.all(
     </ul>
   </div>
 </Layout>
+
+<script>
+  for (const box of document.querySelectorAll("[data-slides]")) {
+    let i = 0;
+    let timer: ReturnType<typeof setInterval>;
+    const show = (n: number) => {
+      const imgs = box.querySelectorAll("img");
+      if (!imgs.length) return;
+      i = n % imgs.length;
+      imgs.forEach((img, k) => img.classList.toggle("opacity-0", k !== i));
+    };
+    const row = box.closest("a")!;
+    row.addEventListener("mouseenter", () => {
+      show(i + 1);
+      timer = setInterval(() => show(i + 1), 1200);
+    });
+    row.addEventListener("mouseleave", () => {
+      clearInterval(timer);
+      show(0);
+    });
+  }
+</script>
