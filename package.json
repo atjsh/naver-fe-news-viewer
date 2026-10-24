@@ -2,7 +2,7 @@
   "name": "naver-fe-news-viewer",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ATJSH/naver-fe-news-viewer.git"
+    "url": "https://github.com/atjsh/naver-fe-news-viewer.git"
   },
   "version": "0.1.0",
   "private": true,
