@@ -55,7 +55,7 @@ const toc = headings.filter((h) => h.depth === 2 && h.text !== issueName);
   <hr class="my-4" />
   <details class="group p-3 rounded-lg">
     <summary class="flex justify-start gap-3 cursor-pointer list-none rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 group-open:cursor-auto group-open:hover:bg-transparent">
-      <div class=" text-sm font-bold flex-shrink-0">목차</div>
+      <div class=" text-sm font-bold shrink-0">목차</div>
       <div class=" flex gap-1 flex-col group-open:hidden">
         <div class=" opacity-0">목차</div>
         <ul class=" flex gap-1 flex-col">
@@ -84,7 +84,7 @@ const toc = headings.filter((h) => h.depth === 2 && h.text !== issueName);
     </ul>
   </details>
   <hr class="my-4" />
-  <div class="prose dark:prose-invert prose-headings:font-bold prose-a:text-blue-600 dark:prose-pre:bg-zinc-800">
+  <div class="prose dark:prose-invert prose-headings:font-bold prose-a:text-blue-600">
     <Content />
   </div>
   <div class="mt-10">
