@@ -58,7 +58,7 @@ const IssuePage: FC<{
       <TOC ignoreName={issueName} />
       <hr className="my-4" />
       <div
-        className="prose dark:prose-invert prose-headings:font-black prose-a:text-blue-600 dark:prose-pre:bg-zinc-800"
+        className="prose dark:prose-invert prose-headings:font-bold prose-a:text-blue-600 dark:prose-pre:bg-zinc-800"
         dangerouslySetInnerHTML={{
           __html: await getIssueByIssueName(issueName)
         }}
