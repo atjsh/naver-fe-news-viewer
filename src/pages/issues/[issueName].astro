@@ -11,9 +11,39 @@ const { issue } = Astro.props;
 const issueName = issue.id;
 const { Content, headings } = await render(issue);
 const toc = headings.filter((h) => h.depth === 2 && h.text !== issueName);
+
+// ponytail: regex over raw markdown; switch to markdown-it tokens if issue formatting drifts
+const body = issue.body ?? "";
+const ogTitle = [
+  toc[0]?.text,
+  toc.length > 1 && `외 ${toc.length - 1}개 주제`,
+  `· fe-news ${issueName}`
+]
+  .filter(Boolean)
+  .join(" ");
+const paragraph = body
+  .slice(body.indexOf("\n## "))
+  .split("\n")
+  .slice(2)
+  .find((l) => l.trim() && !/^\s*([#<>\-*|!]|\d+\.)/.test(l))
+  ?.replace(/!?\[([^\]]*)\]\([^)]*\)/g, "$1")
+  .replace(/<[^>]*>|\*\*|`/g, "")
+  .replace(/\s+/g, " ")
+  .trim();
+const description = paragraph
+  ? paragraph.length > 150
+    ? `${paragraph.slice(0, 150)}…`
+    : paragraph
+  : toc
+      .slice(0, 3)
+      .map((h) => h.text)
+      .join(" · ");
+const image = [...body.matchAll(/<img\s[^>]*src="?([^"\s>]+)/g)]
+  .map((m) => m[1])
+  .find((src) => !src.includes("hits.sh") && !/\.svg(\?|$)/i.test(src));
 ---
 
-<Layout title={`${issueName} | fe-news`}>
+<Layout title={`${issueName} | fe-news`} {ogTitle} {description} {image} type="article">
   <div class=" mb-3">
     <div class=" text-5xl">
       <a href="/issues">📰</a>
