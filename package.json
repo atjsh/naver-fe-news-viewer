@@ -10,7 +10,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "start": "astro preview",
-    "postinstall": "git submodule init && git submodule update",
+    "postinstall": "git submodule sync && git submodule update --init --checkout",
     "typecheck": "astro check"
   },
   "dependencies": {

@@ -2,7 +2,6 @@ name: Update fe-news submodule
 
 on:
   schedule:
-    # fe-news publishes on the 1st-7th, 01:00-11:00 UTC; days 1-10 also catch follow-up fixes
     - cron: "0 15 1-10 * *"
   workflow_dispatch:
 
@@ -13,7 +12,7 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout
         with:
           submodules: true
       - run: git submodule update --remote src/fe-news
