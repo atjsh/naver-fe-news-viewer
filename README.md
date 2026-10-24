@@ -6,5 +6,5 @@
 
 ### 게시글에 대한 저작권
 
-[©Naver Corp](https://github.com/naver/fe-news), 모든 저작권 보유.
+[© Naver Corp](https://github.com/naver/fe-news), 모든 저작권 보유.
 각 게시글에 관한 기여자 정보는 [.gitmodules](.gitmodules)에 기재된 GitHub 저장소로부터 확인할 수 있습니다.
