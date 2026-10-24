@@ -2,6 +2,9 @@
 
 홈페이지: [fe-news.atj.sh](https://fe-news.atj.sh/)
 
-Naver Corp.와는 어떠한 관련이 없는 비공식 뷰어입니다.
+## 저작권 정보
 
-[©Naver Corp](https://github.com/naver/fe-news), 모든 저작권 보유
+### 게시글에 대한 저작권
+
+[©Naver Corp](https://github.com/naver/fe-news), 모든 저작권 보유.
+각 게시글에 관한 기여자 정보는 [.gitmodules](.gitmodules) 및 [src/fe-news](src/fe-news)에서 확인할 수 있습니다.
