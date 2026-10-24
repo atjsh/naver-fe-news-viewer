@@ -5,10 +5,11 @@ import { getIssueByIssueName, getIssues } from "../api";
 import { TOC } from "./toc";
 
 const IssuePage: FC<{
-  params: {
+  params: Promise<{
     issueName: string;
-  };
-}> = async ({ params: { issueName } }) => {
+  }>;
+}> = async ({ params }) => {
+  const { issueName } = await params;
   return (
     <main>
       <div className=" mb-3">
@@ -84,12 +85,13 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({
-  params: { issueName }
+  params
 }: {
-  params: {
+  params: Promise<{
     issueName: string;
-  };
+  }>;
 }): Promise<Metadata> {
+  const { issueName } = await params;
   return {
     title: `${issueName} | fe-news`
   };

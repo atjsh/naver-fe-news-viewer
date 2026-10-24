@@ -37,6 +37,8 @@ export function TOC({ ignoreName }: { ignoreName: string }) {
   const [isFolded, setIsFolded] = useState(true);
 
   useEffect(() => {
+    // reads server-rendered <h2>s from the DOM, which only exists after mount
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setToc(getTableOfContentByH1Tags(ignoreName));
   }, [ignoreName]);
 
