@@ -59,6 +59,7 @@ const inlineText = (token) =>
     .join("");
 
 export default defineConfig({
+  site: "https://fe-news.atj.sh",
   outDir: "./out",
   build: { format: "file" },
   redirects: { "/": "/issues" },
