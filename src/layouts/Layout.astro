@@ -35,15 +35,15 @@ const url = new URL(Astro.url.pathname, Astro.site);
     </script>
     <slot name="head" />
   </head>
-  <body class=" dark:bg-black dark:text-white">
-    <main class=" max-w-2xl p-3 m-auto mt-20 mb-4">
+  <body>
+    <main>
       <slot />
-      <hr class=" my-4" />
+      <hr />
     </main>
-    <footer class=" text-center text-zinc-500 mb-7">
+    <footer>
       <p>
         Naver Corp.와는 어떠한 관련이 없는 비공식 뷰어입니다. &copy;
-        <a href="https://github.com/naver/fe-news" class=" underline" target="_black">
+        <a href="https://github.com/naver/fe-news" target="_black">
           Naver Corp.
         </a>
         , 모든 저작권 보유
@@ -52,7 +52,6 @@ const url = new URL(Astro.url.pathname, Astro.site);
         뷰어 소스코드:{" "}
         <a
           href="https://github.com/atjsh/naver-fe-news-viewer"
-          class="underline"
           target="_black"
         >
           https://github.com/atjsh/naver-fe-news-viewer

@@ -18,36 +18,24 @@ const issues = await Promise.all(
   <link slot="head" rel="preconnect" href="https://miro.medium.com" />
   <link slot="head" rel="preconnect" href="https://i.ytimg.com" />
   <link slot="head" rel="preconnect" href="https://user-images.githubusercontent.com" />
-  <div>
-    <div class=" text-5xl mb-3">📰</div>
-    <h1 class=" text-3xl font-bold">naver/fe-news 뉴스레터</h1>
-    <p class="my-3">
+  <header>
+    <div class="logo">📰</div>
+    <h1>naver/fe-news 뉴스레터</h1>
+    <p>
       &copy;
-      <a
-        href="https://github.com/naver/fe-news"
-        class="underline text-blue-600 visited:text-purple-600"
-        target="_black"
-      >
-        Naver Corp.
-      </a>
+      <a href="https://github.com/naver/fe-news" target="_black">Naver Corp.</a>
       , 모든 저작권 보유
     </p>
-  </div>
-  <div class="mt-10">
-    <h2 class=" text-2xl font-bold">뉴스레터 목록</h2>
-    <hr class=" my-3" />
-    <ul class=" flex gap-3 flex-col w-full">
+  </header>
+  <section>
+    <h2>뉴스레터 목록</h2>
+    <hr />
+    <ul class="issues">
       {
         issues.map(({ id, images, h2s }) => (
           <li>
-            <a
-              href={`/issues/${id}`}
-              class="group flex gap-3 text-blue-600 visited:text-purple-600 hover:underline cursor-pointer p-3 hover:bg-zinc-100 dark:hover:bg-zinc-900"
-            >
-              <div
-                data-slides
-                class="relative shrink-0 w-30 h-30 rounded overflow-hidden bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-2xl"
-              >
+            <a href={`/issues/${id}`}>
+              <div data-slides>
                 📰
                 {images.map((src, k) => (
                   <img
@@ -56,18 +44,13 @@ const issues = await Promise.all(
                     alt=""
                     loading="lazy"
                     referrerpolicy="no-referrer"
-                    class:list={[
-                      "absolute inset-0 w-full h-full object-cover motion-safe:transition-[opacity,scale] duration-500 group-hover:scale-110",
-                      k > 0 && "opacity-0"
-                    ]}
+                    class={k > 0 ? "off" : undefined}
                   />
                 ))}
               </div>
-              <div class="min-w-0">
-                <div class=" text-xl">
-                  {id}
-                </div>
-                <div class=" text-zinc-400 text-sm">
+              <div>
+                <div>{id}</div>
+                <div>
                   {h2s.slice(0, 3).map((h2) => (
                     <span>
                       &quot;{h2.text}&quot; <br />
@@ -81,30 +64,28 @@ const issues = await Promise.all(
         ))
       }
     </ul>
-  </div>
+  </section>
 </Layout>
 
 <script>
-  // hidden slides carry data-src only; load them on first use
   const load = (img: HTMLImageElement) => {
     if (img.dataset.src) {
       img.src = img.dataset.src;
       delete img.dataset.src;
     }
   };
-  // broken image: drop it, reveal the next one
   document.addEventListener(
     "error",
     (e) => {
       const img = e.target as HTMLImageElement;
       if (img.tagName !== "IMG") return;
       const p = img.parentElement!;
-      const visible = !img.classList.contains("opacity-0");
+      const visible = !img.classList.contains("off");
       img.remove();
       const next = p.querySelector("img");
       if (visible && next) {
         load(next);
-        next.classList.remove("opacity-0");
+        next.classList.remove("off");
       }
     },
     true
@@ -116,7 +97,7 @@ const issues = await Promise.all(
       const imgs = box.querySelectorAll("img");
       if (!imgs.length) return;
       i = n % imgs.length;
-      imgs.forEach((img, k) => img.classList.toggle("opacity-0", k !== i));
+      imgs.forEach((img, k) => img.classList.toggle("off", k !== i));
     };
     const row = box.closest("a")!;
     row.addEventListener("mouseenter", () => {
