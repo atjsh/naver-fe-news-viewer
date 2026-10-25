@@ -39,11 +39,11 @@ const issues = await Promise.all(
     <ul class=" flex gap-3 flex-col w-full">
       {
         issues.map(({ id, images, h2s }) => (
-          <a
-            href={`/issues/${id}`}
-            class="group text-blue-600 visited:text-purple-600 hover:underline cursor-pointer p-3 hover:bg-zinc-100 dark:hover:bg-zinc-900"
-          >
-            <li class="flex gap-3">
+          <li>
+            <a
+              href={`/issues/${id}`}
+              class="group flex gap-3 text-blue-600 visited:text-purple-600 hover:underline cursor-pointer p-3 hover:bg-zinc-100 dark:hover:bg-zinc-900"
+            >
               <div
                 data-slides
                 class="relative shrink-0 w-30 h-30 rounded overflow-hidden bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-2xl"
@@ -76,8 +76,8 @@ const issues = await Promise.all(
                   ... 외 {Math.max(h2s.length - 3, 0)}개의 주제
                 </div>
               </div>
-            </li>
-          </a>
+            </a>
+          </li>
         ))
       }
     </ul>
