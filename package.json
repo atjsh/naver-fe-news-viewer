@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build --force",
     "start": "astro preview",
     "postinstall": "git submodule sync && git submodule update --init --checkout",
     "typecheck": "astro check"
@@ -27,6 +27,7 @@
     "@astrojs/check": "^0.9.12",
     "@types/markdown-it-link-attributes": "^3.0.5",
     "@types/node": "^24.19.2",
+    "html-minifier-terser": "^7.2.0",
     "typescript": "npm:@typescript/typescript6@^6.0.2"
   },
   "engines": {

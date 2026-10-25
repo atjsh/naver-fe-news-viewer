@@ -1,4 +1,9 @@
+import { createHash } from "node:crypto";
+import { readdir, readFile, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import shiki from "@shikijs/markdown-it";
+import { minify } from "html-minifier-terser";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import MarkdownIt from "markdown-it";
@@ -8,8 +13,22 @@ import linkAttributes from "markdown-it-link-attributes";
 const md = MarkdownIt({ html: true, linkify: true })
   .use(
     await shiki({
-      themes: { light: "github-light", dark: "github-dark" },
-      defaultColor: "light-dark()"
+      themes: { l: "github-light", d: "github-dark" },
+      defaultColor: false,
+      cssVariablePrefix: "--",
+      tabindex: false,
+      transformers: [
+        {
+          pre(n) {
+            n.properties.class = "shiki";
+          },
+          code(n) {
+            delete n.properties.class;
+            // drop the per-line <span> wrappers; lines are already separated by "\n" text nodes
+            n.children = n.children.flatMap((c) => (c.type === "element" ? c.children : [c]));
+          }
+        }
+      ]
     })
   )
   .use(linkAttributes, {
@@ -17,11 +36,10 @@ const md = MarkdownIt({ html: true, linkify: true })
     attrs: { target: "_blank" }
   })
   .use(anchor, {
-    permalink: anchor.permalink.linkInsideHeader({
-      symbol: "🔗",
-      space: " ",
-      class: "header-anchor no-underline text-xs align-middle"
-    })
+    // short deterministic URL-safe ids instead of percent-encoded Korean slugs
+    slugify: (s) => createHash("sha1").update(s.trim()).digest("base64url").slice(0, 6),
+    tabIndex: false,
+    permalink: anchor.permalink.linkInsideHeader({ symbol: "🔗", space: " " })
   });
 
 const tagFilter = (s) =>
@@ -30,9 +48,19 @@ const tagFilter = (s) =>
     "&lt;"
   );
 
+const hoistShikiColors = (html) => {
+  const classes = new Map();
+  const code = html.replace(/( class="shiki")? style="(--l:[^"]*)"/g, (_, shiki, style) => {
+    if (!classes.has(style)) classes.set(style, `s${classes.size}`);
+    const cls = classes.get(style);
+    return shiki ? ` class="shiki ${cls}"` : ` class="${cls}"`;
+  });
+  const css = [...classes].map(([style, cls]) => `.${cls}{${style}}`).join("");
+  return { code, css };
+};
+
 const markdownIt = {
   name: "markdown-it",
-  options: {},
   createRenderer: async () => ({
     render: async (content) => {
       const env = {};
@@ -48,13 +76,18 @@ const markdownIt = {
             ]
           : []
       );
+      const html = tagFilter(md.renderer.render(tokens, md.options, env)).replace(
+        /<img\s/g,
+        '<img loading="lazy" decoding="async" referrerpolicy="no-referrer" '
+      );
+      const { code, css } = hoistShikiColors(html);
       return {
-        code: tagFilter(md.renderer.render(tokens, md.options, env)),
+        code,
         metadata: {
           headings,
           localImagePaths: [],
           remoteImagePaths: [],
-          frontmatter: {}
+          frontmatter: { shikiCss: css }
         }
       };
     }
@@ -67,11 +100,44 @@ const inlineText = (token) =>
     .map((c) => c.content)
     .join("");
 
+const minifyHtml = {
+  name: "minify-html",
+  hooks: {
+    "astro:build:done": async ({ dir, logger }) => {
+      const root = fileURLToPath(dir);
+      let before = 0;
+      let after = 0;
+      for (const rel of await readdir(root, { recursive: true })) {
+        if (!rel.endsWith(".html")) continue;
+        const file = join(root, rel);
+        const html = await readFile(file, "utf8");
+        const min = await minify(html, {
+          collapseWhitespace: true,
+          removeComments: true,
+          removeAttributeQuotes: true,
+          removeOptionalTags: true,
+          useShortDoctype: true,
+          decodeEntities: true,
+          sortAttributes: true,
+          sortClassName: true,
+          minifyCSS: true,
+          minifyJS: true
+        });
+        before += Buffer.byteLength(html);
+        after += Buffer.byteLength(min);
+        await writeFile(file, min);
+      }
+      logger.info(`${before} → ${after} bytes (-${(((before - after) / before) * 100).toFixed(1)}%)`);
+    }
+  }
+};
+
 export default defineConfig({
+  integrations: [minifyHtml],
   site: "https://fe-news.atj.sh",
   outDir: "./out",
   build: { format: "file" },
-  redirects: { "/": "/issues" },
+  redirects: { "/issues": "/" },
   vite: { plugins: [tailwindcss()] },
   markdown: { processor: markdownIt }
 });

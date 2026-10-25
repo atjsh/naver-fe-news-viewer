@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
-import Layout from "../../layouts/Layout.astro";
-import { issueImages } from "../../issueImages";
+import Layout from "../layouts/Layout.astro";
+import { issueImages } from "../issueImages";
 
 const issues = await Promise.all(
   (await getCollection("issues"))
@@ -15,6 +15,9 @@ const issues = await Promise.all(
 ---
 
 <Layout>
+  <link slot="head" rel="preconnect" href="https://miro.medium.com" />
+  <link slot="head" rel="preconnect" href="https://i.ytimg.com" />
+  <link slot="head" rel="preconnect" href="https://user-images.githubusercontent.com" />
   <div>
     <div class=" text-5xl mb-3">📰</div>
     <h1 class=" text-3xl font-bold">naver/fe-news 뉴스레터</h1>
@@ -48,8 +51,8 @@ const issues = await Promise.all(
                 📰
                 {images.map((src, k) => (
                   <img
-                    src={src}
-                    onerror="const p=this.parentElement,v=!this.classList.contains('opacity-0');this.remove();v&&p.querySelector('img')?.classList.remove('opacity-0')"
+                    src={k === 0 ? src : undefined}
+                    data-src={k > 0 ? src : undefined}
                     alt=""
                     loading="lazy"
                     referrerpolicy="no-referrer"
@@ -82,6 +85,30 @@ const issues = await Promise.all(
 </Layout>
 
 <script>
+  // hidden slides carry data-src only; load them on first use
+  const load = (img: HTMLImageElement) => {
+    if (img.dataset.src) {
+      img.src = img.dataset.src;
+      delete img.dataset.src;
+    }
+  };
+  // broken image: drop it, reveal the next one
+  document.addEventListener(
+    "error",
+    (e) => {
+      const img = e.target as HTMLImageElement;
+      if (img.tagName !== "IMG") return;
+      const p = img.parentElement!;
+      const visible = !img.classList.contains("opacity-0");
+      img.remove();
+      const next = p.querySelector("img");
+      if (visible && next) {
+        load(next);
+        next.classList.remove("opacity-0");
+      }
+    },
+    true
+  );
   for (const box of document.querySelectorAll("[data-slides]")) {
     let i = 0;
     let timer: ReturnType<typeof setInterval>;
@@ -93,6 +120,7 @@ const issues = await Promise.all(
     };
     const row = box.closest("a")!;
     row.addEventListener("mouseenter", () => {
+      box.querySelectorAll("img").forEach(load);
       show(i + 1);
       timer = setInterval(() => show(i + 1), 1200);
     });

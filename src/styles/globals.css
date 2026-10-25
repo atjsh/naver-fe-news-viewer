@@ -1,4 +1,8 @@
-@import "tailwindcss";
+/* scan only our templates: fe-news markdown and workflow files contain words/code that generate dead utilities */
+@import "tailwindcss" source(none);
+@source "../pages";
+@source "../components";
+@source "../layouts";
 @plugin "@tailwindcss/typography";
 
 :root {
@@ -20,4 +24,46 @@ body {
     noto,
     arial,
     sans-serif;
+}
+
+.header-anchor {
+  text-decoration: none;
+  font-size: 0.75rem;
+  vertical-align: middle;
+}
+
+.toc,
+.toc ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.toc ul {
+  padding-left: 1rem;
+  margin-top: 0.25rem;
+}
+.toc a {
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+.toc a:hover {
+  text-decoration: underline;
+}
+.toc > li > a {
+  font-weight: 700;
+}
+details:not([open]) .toc ul > li:nth-child(n + 4) {
+  display: none;
+}
+details:not([open]) .toc ul:has(> li:nth-child(4))::after {
+  content: "...";
+  font-size: 0.875rem;
+}
+
+.shiki,
+.shiki span {
+  color: light-dark(var(--l), var(--d));
+}
+.shiki {
+  background-color: light-dark(var(--l-bg), var(--d-bg));
 }
