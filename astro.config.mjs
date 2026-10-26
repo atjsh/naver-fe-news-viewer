@@ -4,7 +4,6 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import shiki from "@shikijs/markdown-it";
 import { minify } from "html-minifier-terser";
-import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 import MarkdownIt from "markdown-it";
 import anchor from "markdown-it-anchor";
@@ -41,6 +40,13 @@ const md = MarkdownIt({ html: true, linkify: true })
     tabIndex: false,
     permalink: anchor.permalink.linkInsideHeader({ symbol: "🔗", space: " " })
   });
+
+// Keep wide tables scrollable without changing their native table layout.
+md.renderer.rules.table_open = (tokens, idx, options, _env, self) =>
+  '<div class="table-scroll" role="region" aria-label="표" tabindex="0">\n' +
+  self.renderToken(tokens, idx, options);
+md.renderer.rules.table_close = (tokens, idx, options, _env, self) =>
+  self.renderToken(tokens, idx, options) + "</div>\n";
 
 const tagFilter = (s) =>
   s.replace(
@@ -136,8 +142,8 @@ export default defineConfig({
   integrations: [minifyHtml],
   site: "https://fe-news.atj.sh",
   outDir: "./out",
-  build: { format: "file" },
+  // Keep the small shared stylesheet cacheable instead of repeating it per page.
+  build: { format: "file", inlineStylesheets: "never" },
   redirects: { "/issues": "/" },
-  vite: { plugins: [tailwindcss()] },
   markdown: { processor: markdownIt }
 });

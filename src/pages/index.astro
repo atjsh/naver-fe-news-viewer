@@ -30,7 +30,7 @@ const issues = await Promise.all(
   <section>
     <h2>뉴스레터 목록</h2>
     <hr />
-    <ul class="issues">
+    <ul class="issues" role="list">
       {
         issues.map(({ id, images, h2s }) => (
           <li>
@@ -49,8 +49,8 @@ const issues = await Promise.all(
                 ))}
               </div>
               <div>
-                <div>{id}</div>
-                <div>
+                <time datetime={id}>{id}</time>
+                <div class="issue-summary">
                   {h2s.slice(0, 3).map((h2) => (
                     <span>
                       &quot;{h2.text}&quot; <br />
