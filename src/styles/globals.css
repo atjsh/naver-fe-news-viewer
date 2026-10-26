@@ -43,9 +43,6 @@ footer a {
   font-size: 3rem;
   line-height: 1;
 }
-.logo a {
-  text-decoration: none;
-}
 
 .issues {
   list-style: none;
@@ -76,6 +73,10 @@ footer a {
 @media (hover: hover) {
   .issues a:hover {
     background-color: light-dark(#f4f4f5, #202023);
+  }
+  :is(.toc, .meta, .logo) a:hover,
+  .back:hover {
+    text-decoration: underline;
   }
 }
 [data-slides] {
@@ -114,6 +115,15 @@ footer a {
   height: 1.75rem;
   vertical-align: middle;
 }
+:is(.toc, .meta, .logo) a,
+.back {
+  color: inherit;
+  text-decoration: none;
+}
+:is(.toc, .meta, .logo) a:focus-visible,
+.back:focus-visible {
+  text-decoration: underline;
+}
 main > header .back {
   font-size: 0.875rem;
 }
@@ -122,15 +132,6 @@ main > .back {
   width: fit-content;
   margin-block: 2.5rem 1rem;
   font-size: 1.125rem;
-}
-@media (width >= 48rem) {
-  .back {
-    text-decoration: none;
-  }
-  .back:hover,
-  .back:focus-visible {
-    text-decoration: underline;
-  }
 }
 .header-anchor {
   text-decoration: none;
