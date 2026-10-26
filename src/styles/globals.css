@@ -168,6 +168,11 @@ article {
   word-break: keep-all;
   overflow-wrap: break-word;
 }
+.toc,
+.toc ul,
+article :is(ul, ol) {
+  padding-inline-start: 1.5rem;
+}
 article img,
 article video {
   max-width: 100%;
