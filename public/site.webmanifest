@@ -1,0 +1,28 @@
+{
+  "id": "/",
+  "name": "naver/fe-news 뉴스레터 뷰어 (비공식)",
+  "short_name": "FE News",
+  "lang": "ko",
+  "start_url": "/",
+  "display": "browser",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
