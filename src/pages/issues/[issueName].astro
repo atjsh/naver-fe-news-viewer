@@ -57,9 +57,6 @@ const image = issueImages(body)[0];
 <Layout title={`${issueName} | fe-news`} {ogTitle} {description} {image} type="article">
   {shikiCss && <style slot="head" set:html={shikiCss} />}
   <header>
-    <div class="logo">
-      <a href="/">📰</a>
-    </div>
     <a href="/" class="back">← naver/fe-news 뉴스레터</a>
   </header>
   <div class="meta">

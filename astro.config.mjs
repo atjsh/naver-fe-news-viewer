@@ -38,7 +38,7 @@ const md = MarkdownIt({ html: true, linkify: true })
     // short deterministic URL-safe ids instead of percent-encoded Korean slugs
     slugify: (s) => createHash("sha1").update(s.trim()).digest("base64url").slice(0, 6),
     tabIndex: false,
-    permalink: anchor.permalink.linkInsideHeader({ symbol: "🔗", space: " " })
+    permalink: anchor.permalink.linkInsideHeader({ symbol: "#", space: " " })
   });
 
 // Keep wide tables scrollable without changing their native table layout.

@@ -26,10 +26,7 @@ const url = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:url" content={url} />
     {image && <meta property="og:image" content={image} />}
     <meta name="twitter:card" content={image ? "summary_large_image" : "summary"} />
-    <link
-      rel="icon"
-      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📰</text></svg>"
-    />
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48 64x64" />
     <script type="speculationrules" is:inline>
       {"prerender":[{"where":{"href_matches":["/","/issues/*"]},"eagerness":"moderate"}]}
     </script>

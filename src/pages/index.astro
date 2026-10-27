@@ -19,7 +19,6 @@ const issues = await Promise.all(
   <link slot="head" rel="preconnect" href="https://i.ytimg.com" />
   <link slot="head" rel="preconnect" href="https://user-images.githubusercontent.com" />
   <header>
-    <div class="logo">📰</div>
     <h1>naver/fe-news 뉴스레터</h1>
     <p>
       &copy;
@@ -36,7 +35,6 @@ const issues = await Promise.all(
           <li>
             <a href={`/issues/${id}`}>
               <div data-slides>
-                📰
                 {images.map((src, k) => (
                   <img
                     src={k === 0 ? src : undefined}

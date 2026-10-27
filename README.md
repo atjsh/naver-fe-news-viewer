@@ -1,5 +1,7 @@
 # 비공식 naver/fe-news 뉴스레터 뷰어
 
+<img src="public/blueprint.jpg" alt="코드와 도표가 그려진 파란색 설계도 두루마리" width="480" />
+
 홈페이지: [fe-news.atj.sh](https://fe-news.atj.sh/)
 
 ## 저작권 정보

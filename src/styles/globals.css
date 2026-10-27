@@ -39,10 +39,6 @@ footer {
 footer a {
   color: inherit;
 }
-.logo {
-  font-size: 3rem;
-  line-height: 1;
-}
 
 .issues {
   list-style: none;
@@ -74,7 +70,7 @@ footer a {
   .issues a:hover {
     background-color: light-dark(#f4f4f5, #202023);
   }
-  :is(.toc, .meta, .logo) a:hover,
+  :is(.toc, .meta) a:hover,
   .back:hover {
     text-decoration: underline;
   }
@@ -86,9 +82,6 @@ footer a {
   aspect-ratio: 1;
   border-radius: 0.375rem;
   background-color: light-dark(#f4f4f5, #27272a);
-  display: grid;
-  place-items: center;
-  font-size: 1.5rem;
   overflow: hidden;
 }
 [data-slides] img {
@@ -115,12 +108,12 @@ footer a {
   height: 1.75rem;
   vertical-align: middle;
 }
-:is(.toc, .meta, .logo) a,
+:is(.toc, .meta) a,
 .back {
   color: inherit;
   text-decoration: none;
 }
-:is(.toc, .meta, .logo) a:focus-visible,
+:is(.toc, .meta) a:focus-visible,
 .back:focus-visible {
   text-decoration: underline;
 }
